@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>MRAS Admin Dashboard</title>
+    <title>Pourashava Hub</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -488,14 +488,297 @@
           padding-right: 14px;
         }
       }
+      .gl {
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        padding: 10px 10px 2px;
+      }
+      .flow {
+        display: flex;
+        height: 26px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 4px 0 14px;
+        gap: 2px;
+      }
+      .flow i {
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font: 700 12px inherit;
+        font-style: normal;
+      }
+      .board {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(200px, 1fr);
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+      .col {
+        background: color-mix(in srgb, var(--bd) 35%, transparent);
+        border-radius: 12px;
+        padding: 10px;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border: 2px dashed transparent;
+      }
+      .col.ov2 {
+        border-color: var(--ac);
+      }
+      .colh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .colh b {
+        background: var(--c);
+        color: #fff;
+        border-radius: 99px;
+        padding: 0 9px;
+        font-size: 12px;
+      }
+      .tile {
+        background: var(--cd);
+        border: 1px solid var(--bd);
+        border-left: 4px solid var(--c);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        cursor: grab;
+      }
+      .tile.dg {
+        opacity: 0.4;
+      }
+      .tile strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .ia {
+        display: flex;
+        flex-direction: column;
+        opacity: 0.5;
+      }
+      .tile:hover .ia {
+        opacity: 1;
+      }
+      .ia button {
+        background: none;
+        border: 0;
+        cursor: pointer;
+        color: var(--tx);
+        padding: 2px 5px;
+        border-radius: 6px;
+      }
+      .ia button:hover {
+        background: var(--bd);
+      }
+      .cellb {
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--c) 18%, transparent);
+        color: var(--c);
+      }
+      .bar {
+        height: 8px;
+        border-radius: 99px;
+        background: var(--bd);
+        min-width: 90px;
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #0ea5e9, #10b981);
+      }
+      @media (max-width: 900px) {
+        .gl {
+          display: none;
+        }
+      }
+
+      .bd {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .stg {
+        background: color-mix(in srgb, var(--bd) 28%, transparent);
+        border-top: 3px solid var(--c);
+        border-radius: 12px;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .ph {
+        display: grid;
+        gap: 5px;
+        padding: 2px 2px 4px;
+      }
+      .t1 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 700;
+        font-size: 12.5px;
+      }
+      .t1 .nm {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .t1 .num {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--c);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 10.5px;
+        flex: none;
+      }
+      .t1 b {
+        background: color-mix(in srgb, var(--c) 18%, transparent);
+        color: var(--c);
+        border-radius: 99px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+      .ph .bar {
+        min-width: 0;
+        height: 4px;
+      }
+      .ph .bar i {
+        background: var(--c);
+      }
+      .lh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10.5px;
+        color: var(--mu);
+        margin: 2px 2px 0;
+      }
+      .lh .chip {
+        font-size: 10.5px;
+        padding: 0 7px;
+      }
+      .bd .col {
+        min-height: 44px;
+        padding: 4px;
+        gap: 4px;
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--cd) 55%, transparent);
+        border: 1.5px dashed transparent;
+      }
+      .bd .col.ov2 {
+        border-color: var(--ac);
+        background: color-mix(in srgb, var(--ac) 8%, transparent);
+      }
+      .bd .tile {
+        position: relative;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 8px;
+        border: 1px solid var(--bd);
+        border-radius: 8px;
+        font-size: 12.5px;
+        box-shadow: none;
+      }
+      .bd .tile .nm {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+      }
+      .bd .tile .pill {
+        font-size: 10.5px;
+        padding: 0 7px;
+      }
+      .sd {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .bd .ia {
+        flex-direction: row;
+        opacity: 1;
+        position: absolute;
+        right: 3px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--cd);
+        padding-left: 6px;
+        display: none;
+      }
+      .bd .ia button {
+        font-size: 12px;
+        padding: 1px 4px;
+      }
+      .bd .tile:hover .ia {
+        display: flex;
+      }
+      @media (hover: none) {
+        .bd .ia {
+          display: flex;
+          position: static;
+          transform: none;
+          padding: 0;
+        }
+      }
+      .e0 {
+        color: var(--mu);
+        opacity: 0.45;
+        margin: auto;
+        font-size: 12px;
+      }
+      @media (max-width: 1179px) {
+        .bd {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 720px) {
+        .bd {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 480px) {
+        .bd {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="app">
       <aside>
         <div class="brand">
-          <div class="logo">M</div>
-          <div><b>MRAS Admin</b><small>Data Entry Tracker</small></div>
+          <div class="logo">P</div>
+          <div>
+            <b>Pourashava Hub</b><small>MRAS + Migration Pipeline</small>
+          </div>
         </div>
         <nav id="nav"></nav>
         <div class="side-f">
@@ -552,6 +835,26 @@
         <div class="mb">
           <button class="btn" id="cx">Cancel</button
           ><button class="btn pri" id="sv">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="ov" id="pm" hidden>
+      <div class="mod" style="width: min(420px, 100%)">
+        <h2 id="pmt"></h2>
+        <div class="fg">
+          <label class="f">Pourashava name<input id="fpn" list="pnl" /></label
+          ><datalist id="pnl"></datalist>
+          <label
+            >Type<select id="fpy">
+              <option>Holding</option>
+              <option>Trade</option>
+            </select></label
+          ><label>Stage<select id="fpg"></select></label>
+          <label class="f">Status<select id="fpx"></select></label>
+        </div>
+        <div class="mb">
+          <button class="btn" id="pcx">Cancel</button
+          ><button class="btn pri" id="psv">Save</button>
         </div>
       </div>
     </div>
@@ -2717,13 +3020,14 @@
       const save = () => {
         try {
           localStorage.setItem("mras.v1", JSON.stringify(D));
+          localStorage.setItem("pipe.v1", JSON.stringify(P));
         } catch (e) {}
       };
       const mut = () => {
         save();
         render();
       };
-      let V = -2,
+      let V = -3,
         F = { dv: "", md: "", c: "" },
         sk = "",
         sd = 1,
@@ -2736,18 +3040,6 @@
         `<span class="chip" style="--c:${MC[MODS.indexOf(m)] || "#64748b"}">${esc(m)}</span>`;
       const cpill = (c) =>
         `<span class="pill" style="--c:${CATS[c].c}">${CATS[c].n}</span>`;
-      function nav() {
-        $("#nav").innerHTML = [
-          [-2, "📊", "Overview", D.length],
-          [-1, "🗂️", "All Data", D.length],
-          ...CATS.map((c, i) => [i, c.i, c.n, cn(i)]),
-        ]
-          .map(
-            ([v, i, l, c]) =>
-              `<button class="nv${V === v ? " on" : ""}" data-v="${v}"><span>${i}</span>${l}<b>${c}</b></button>`,
-          )
-          .join("");
-      }
       function mk(id, cfg) {
         if (window.Chart) CH.push(new Chart($(id), cfg));
       }
@@ -2884,7 +3176,7 @@
         ];
         if (V === -1) cols.push(["c", "Sheet"]);
         if (V === 1) cols.push(["fu", "Follow-up"], ["cn", "Contact"]);
-        cols.push(["rm", "Remarks"]);
+        cols.push(["pl", "Pipeline"], ["rm", "Remarks"]);
         let a = D.filter(
           (d) =>
             (V < 0 || d.c === V) &&
@@ -2898,7 +3190,8 @@
             (V !== -1 || F.c === "" || d.c == F.c),
         );
         if (sk) {
-          const v = (d) => (sk === "c" ? CATS[d.c].n : d[sk]);
+          const v = (d) =>
+            sk === "c" ? CATS[d.c].n : sk === "pl" ? plS(d) : d[sk];
           a = [...a].sort(
             (x, y) => String(v(x)).localeCompare(String(v(y))) * sd,
           );
@@ -2910,17 +3203,19 @@
         const opt = (l, k, arr) =>
           `<select data-f="${k}"><option value="">${l}</option>${arr.map(([v, t]) => `<option value="${esc(v)}"${String(F[k]) === String(v) ? " selected" : ""}>${esc(t)}</option>`).join("")}</select>`;
         const cell = (d, k) =>
-          k === "md"
-            ? mchip(d.md)
-            : k === "c"
-              ? cpill(d.c)
-              : k === "dt" || k === "fu"
-                ? fmt(d[k])
-                : k === "rm"
-                  ? `<div class="rm">${esc(d.rm)}</div>`
-                  : k === "pz"
-                    ? `<b>${esc(d.pz)}</b>`
-                    : esc(d[k]);
+          k === "pl"
+            ? plc(d)
+            : k === "md"
+              ? mchip(d.md)
+              : k === "c"
+                ? cpill(d.c)
+                : k === "dt" || k === "fu"
+                  ? fmt(d[k])
+                  : k === "rm"
+                    ? `<div class="rm">${esc(d.rm)}</div>`
+                    : k === "pz"
+                      ? `<b>${esc(d.pz)}</b>`
+                      : esc(d[k]);
         $("#main").innerHTML =
           `<div class="card"><div class="ch"><h2>${V < 0 ? "All records" : CATS[V].i + " " + CATS[V].n} <span class="mu" style="font-weight:400">· ${a.length} of ${base.length}</span></h2><div class="tools">${opt(
             "All divisions",
@@ -2946,15 +3241,16 @@
         CH.forEach((c) => c.destroy());
         CH = [];
         nav();
-        $("#ttl").textContent =
-          V === -2 ? "Overview" : V === -1 ? "All Data" : CATS[V].n;
-        $("#sub").textContent =
-          V === -2
-            ? "Live summary of all Pourashava data-entry work"
-            : V === -1
-              ? "Master list · every record across all sheets"
-              : "Sheet: " + CATS[V].s;
-        V === -2 ? ov() : tv();
+        head();
+        V === -3
+          ? home()
+          : V === -2
+            ? ov()
+            : V === 10
+              ? pboard()
+              : V === 11
+                ? ptable()
+                : tv();
         $("#dvl").innerHTML = [...new Set(D.map((d) => d.dv))]
           .sort()
           .map((x) => `<option value="${esc(x)}">`)
@@ -3069,19 +3365,12 @@
       $("#fc").innerHTML = CATS.map(
         (c, i) => `<option value="${i}">${c.n} (${c.s})</option>`,
       ).join("");
-      $("#add").onclick = () => openM(null);
-      $("#rst").onclick = () => {
-        const o = D;
-        D = SEED.map((r) => ({ id: uid(), ...r }));
-        mut();
-        toast("Reset to original data", () => {
-          D = o;
-          mut();
-        });
-      };
+      $("#add").onclick = () => (V >= 10 ? openP(null) : openM(null));
+
       $("#q").oninput = (e) => {
         q = e.target.value.trim().toLowerCase();
-        if (V === -2) V = -1;
+        if (V === -2 || V === -3) V = -1;
+        if (V === 10) V = 11;
         pg = 0;
         render();
       };
@@ -3225,32 +3514,9 @@
         });
         return out;
       }
-      $("#imp").onchange = async (e) => {
-        const f = e.target.files[0];
-        if (!f) return;
-        try {
-          const r = fromWb(
-            XLSX.read(await f.arrayBuffer(), { cellDates: true }),
-          );
-          if (!r.length) throw 0;
-          const o = D;
-          D = r;
-          mut();
-          toast(`Imported ${r.length} records`, () => {
-            D = o;
-            mut();
-          });
-        } catch (x) {
-          toast("Could not read that workbook");
-        }
-        e.target.value = "";
-      };
+
       $("#exp").onclick = async () => {
         const dl = window.claude ? await claude.use("downloads") : null;
-        if (!dl) {
-          toast("Export is not available in this view");
-          return;
-        }
         const dt = (s) =>
             s
               ? new Date(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10))
@@ -3338,16 +3604,685 @@
           1,
           X,
         );
+        pSheet(wb);
+        const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" }),
+          fn = "Pourashava_Hub.xlsx";
         try {
-          await dl.save({
-            filename: "Data_Entry_MRAS_Full_Update.xlsx",
-            data: XLSX.write(wb, { type: "array", bookType: "xlsx" }),
-          });
+          if (dl) await dl.save({ filename: fn, data: buf });
+          else {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(
+              new Blob([buf], { type: "application/octet-stream" }),
+            );
+            a.download = fn;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1e4);
+          }
           toast("Workbook exported");
         } catch (x) {
           if (!x || x.code !== "declined") toast("Export failed");
         }
       };
+      /* ===== Pipeline module + merged views ===== */
+      const ST = [
+        { n: "File Ready", x: "Entry File Ready", s: "Queued" },
+        { n: "Entry Running", x: "Entry Running", s: "Running" },
+        { n: "Excel Completed", x: "Completed Entry Excel file ", s: "Ready" },
+        {
+          n: "PreProd Entry Done",
+          x: "Entry Completed in PreProduction Server",
+          s: "Live",
+        },
+        {
+          n: "PreProd Migrated",
+          x: "Migration Completed in PreProduction Server",
+          s: "Live",
+        },
+      ];
+      const STC = ["#64748b", "#f59e0b", "#0ea5e9", "#8b5cf6", "#10b981"],
+        SS = ["Queued", "Running", "Paused", "Ready", "Live"],
+        SC = {
+          Queued: "#64748b",
+          Running: "#f59e0b",
+          Paused: "#ef4444",
+          Ready: "#0ea5e9",
+          Live: "#10b981",
+        },
+        COLS = [1, 4, 8, 12, 16];
+      const SEED2 = [
+        [
+          "Satkania Trade",
+          "Pangsha Holding",
+          "Shibganj Holding",
+          "Mundumala Holding",
+        ],
+        [
+          "Satkania Holding:Paused",
+          "Akkelpur Trade",
+          "Pangsha Trade",
+          "Bagatipara Trade",
+          "Kabirhat Trade",
+        ],
+        ["Shibganj Trade"],
+        [
+          "Daulatkhan Trade",
+          "Daulatkhan Holding",
+          "Katakhali Holding",
+          "Katakhali Trade",
+          "Durgapur Holding",
+          "Gabtoli Trade",
+          "Raigonj Holding",
+          "Dhunot Holding",
+          "Dhunot Trade",
+          "Talora Holding",
+          "Taherpur Trade",
+          "Dhamoirhat Holding",
+          "Faridpur Holding",
+          "Akkelpur Holding",
+        ],
+        [
+          "Chatak Holding",
+          "Panchogarg Holding",
+          "Charghat Holding",
+          "Gabtali Holding",
+          "Bagha Holding",
+          "Mirsorai Holding",
+          "Chandanaish Holding",
+        ],
+      ];
+      function pparse(s) {
+        s = String(s).trim().replace(/\s+/g, " ");
+        const m = s.match(/^(.*?)\s*(Holding|Trade)$/i);
+        return m
+          ? {
+              name: m[1],
+              type: m[2][0].toUpperCase() + m[2].slice(1).toLowerCase(),
+            }
+          : { name: s, type: "Holding" };
+      }
+      const pcs = (s) =>
+        SS.find((x) => x.toLowerCase() === s.toLowerCase()) || s;
+      const pseed = () =>
+        SEED2.flatMap((a, i) =>
+          a.map((t) => {
+            const [x, st] = t.split(":");
+            return { id: uid(), ...pparse(x), stage: i, status: st || ST[i].s };
+          }),
+        );
+      let P;
+      try {
+        P = JSON.parse(localStorage.getItem("pipe.v1"));
+      } catch (e) {}
+      if (!Array.isArray(P)) P = pseed();
+      let PF = { t: "", s: "", x: "" },
+        psk = "name",
+        psd = 1;
+      const pcnt = (i) => P.filter((d) => d.stage === i).length;
+      const tchip = (t) =>
+        `<span class="chip" style="--c:${t === "Trade" ? "#ec4899" : "#6366f1"}">${t}</span>`;
+      const spill = (s) =>
+        `<span class="pill" style="--c:${SC[s] || "#64748b"}">${esc(s)}</span>`;
+      const kpi = ([i, l, v, c, go]) =>
+        `<div class="card kp" data-v="${go}" style="--c:${c}"><span class="ic">${i}</span><div><b>${v}</b><small>${l}</small></div></div>`;
+      const cd = () => {
+        const r = getComputedStyle(document.documentElement);
+        Chart.defaults.color = r.getPropertyValue("--mu").trim();
+        Chart.defaults.font.family = "inherit";
+        return (k) => r.getPropertyValue(k).trim();
+      };
+      const pfind = (d) =>
+        P.find(
+          (p) =>
+            p.name.toLowerCase() === d.pz.toLowerCase() &&
+            p.type ===
+              (d.md === "Holding Tax"
+                ? "Holding"
+                : d.md === "Trade License"
+                  ? "Trade"
+                  : "-"),
+        );
+      const plS = (d) => {
+        const p = pfind(d);
+        return p ? String(p.stage) : "9";
+      };
+      const plc = (d) => {
+        const p = pfind(d);
+        return p
+          ? `<span class="pill" style="--c:${STC[p.stage]}">${ST[p.stage].n}</span>`
+          : '<span class="mu">—</span>';
+      };
+      function nav() {
+        const G = [
+          ["Overview", [[-3, "🏠", "Home", ""]]],
+          [
+            "MRAS Data Entry",
+            [
+              [-2, "📊", "Overview", ""],
+              [-1, "🗂️", "All Data", D.length],
+              ...CATS.map((c, i) => [i, c.i, c.n, cn(i)]),
+            ],
+          ],
+          [
+            "Migration Pipeline",
+            [
+              [10, "🧭", "Board", P.length],
+              [11, "📋", "Entries", P.length],
+            ],
+          ],
+        ];
+        $("#nav").innerHTML = G.map(
+          ([g, it]) =>
+            `<div class="gl">${g}</div>` +
+            it
+              .map(
+                ([v, i, l, c]) =>
+                  `<button class="nv${V === v ? " on" : ""}" data-v="${v}"><span>${i}</span>${l}${c !== "" ? `<b>${c}</b>` : ""}</button>`,
+              )
+              .join(""),
+        ).join("");
+      }
+      function head() {
+        const T = {
+            "-3": [
+              "Home",
+              "MRAS data entry and migration pipeline in one place",
+            ],
+            "-2": [
+              "MRAS Overview",
+              "Live summary of all Pourashava data-entry work",
+            ],
+            "-1": ["All Data", "Master list · every record across all sheets"],
+            10: [
+              "Pipeline Board",
+              "Holding & Trade modules from entry to migration",
+            ],
+            11: ["Pipeline Entries", "Manage every pipeline entry"],
+          },
+          t = T[V] || [CATS[V].n, "Sheet: " + CATS[V].s];
+        $("#ttl").textContent = t[0];
+        $("#sub").textContent = t[1];
+      }
+      function home() {
+        const live = pcnt(3) + pcnt(4),
+          pc = P.length ? Math.round((live / P.length) * 100) : 0,
+          lk = D.filter(pfind).length;
+        const K = [
+          ["📦", "MRAS records", D.length, "#6366f1", -1],
+          [
+            "🏛️",
+            "Pourashavas",
+            new Set(D.map((d) => d.dv + d.ds + d.pz)).size,
+            "#8b5cf6",
+            -2,
+          ],
+          ["🛠️", "Working", cn(0), "#10b981", 0],
+          ["📵", "Non responsive", cn(1), "#ef4444", 1],
+          ["🧭", "Pipeline entries", P.length, "#f59e0b", 11],
+          ["🚀", "Live on PreProd", live, "#10b981", 10],
+          ["✅", "Pipeline completion", pc + "%", "#0ea5e9", 10],
+          ["🔗", "MRAS ↔ pipeline links", lk, "#ec4899", -1],
+        ];
+        $("#main").innerHTML =
+          `<div class="kpis">${K.map(kpi).join("")}</div><div class="grid"><div class="card"><h2>MRAS sheets</h2><div class="cv"><canvas id="c1"></canvas></div></div><div class="card"><h2>Pipeline stages</h2><div class="cv"><canvas id="c2"></canvas></div></div><div class="card"><h2>MRAS records by division</h2><div class="cv"><canvas id="c3"></canvas></div></div></div>`;
+        if (!window.Chart) return;
+        const g = cd(),
+          op = {
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" } },
+          },
+          dv = [...new Set(D.map((d) => d.dv))].sort(
+            (a, b) =>
+              D.filter((d) => d.dv === b).length -
+              D.filter((d) => d.dv === a).length,
+          );
+        mk("#c1", {
+          type: "doughnut",
+          data: {
+            labels: CATS.map((c) => c.n),
+            datasets: [
+              {
+                data: CATS.map((c, i) => cn(i)),
+                backgroundColor: CATS.map((c) => c.c),
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: { ...op, cutout: "62%" },
+        });
+        mk("#c2", {
+          type: "doughnut",
+          data: {
+            labels: ST.map((s) => s.n),
+            datasets: [
+              {
+                data: ST.map((s, i) => pcnt(i)),
+                backgroundColor: STC,
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: { ...op, cutout: "62%" },
+        });
+        mk("#c3", {
+          type: "bar",
+          data: {
+            labels: dv,
+            datasets: [
+              {
+                data: dv.map((v) => D.filter((d) => d.dv === v).length),
+                backgroundColor: "#6366f1",
+                borderRadius: 5,
+              },
+            ],
+          },
+          options: {
+            ...op,
+            indexAxis: "y",
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { precision: 0 }, grid: { color: g("--bd") } },
+              y: { grid: { display: false } },
+            },
+          },
+        });
+      }
+      function pboard() {
+        const t = P.length,
+          live = pcnt(3) + pcnt(4),
+          pct = t ? Math.round((live / t) * 100) : 0;
+        const K = [
+          ["📦", "Pipeline entries", t, "#6366f1", 11],
+          [
+            "🏛️",
+            "Pourashavas",
+            new Set(P.map((d) => d.name.toLowerCase())).size,
+            "#0ea5e9",
+            11,
+          ],
+          ["⚙️", "In progress", pcnt(1) + pcnt(2), "#f59e0b", 11],
+          ["🚀", "Live on PreProd", live, "#10b981", 11],
+          ["✅", "Completion", pct + "%", "#8b5cf6", 11],
+        ];
+        const m = {};
+        P.forEach((d) => {
+          (m[d.name.toLowerCase()] = m[d.name.toLowerCase()] || { n: d.name })[
+            d.type
+          ] = d;
+        });
+        const rows = Object.values(m).sort((a, b) => a.n.localeCompare(b.n));
+        const cell = (d) =>
+          d
+            ? `<td><button class="cellb" data-pe="${d.id}" style="--c:${STC[d.stage]}">${ST[d.stage].n}</button></td>`
+            : '<td class="mu">—</td>';
+        $("#main").innerHTML = `<div class="kpis">${K.map(kpi).join("")}</div>
+<div class="card" style="padding:12px"><div class="ch" style="margin-bottom:8px"><h2>Pipeline board</h2><span class="mu">Drag cards between stages · lanes keep Holding and Trade apart</span></div>
+<div class="bd">${ST.map(
+          (s, i) =>
+            `<div class="stg" style="--c:${STC[i]}"><div class="ph"><div class="t1"><span class="num">${i + 1}</span><span class="nm">${s.n}</span><b>${pcnt(i)}</b></div><div class="bar" title="${t ? Math.round((pcnt(i) / t) * 100) : 0}% of entries"><i style="width:${t ? (pcnt(i) / t) * 100 : 0}%"></i></div></div>${[
+              "Holding",
+              "Trade",
+            ]
+              .map((ty) => {
+                const a = P.filter((d) => d.stage === i && d.type === ty).sort(
+                  (x, y) => x.name.localeCompare(y.name),
+                );
+                return `<div class="lh">${tchip(ty)}<span>${a.length}</span></div><div class="col" data-s="${i}" data-t="${ty}">${a.map((d) => `<div class="tile" draggable="true" data-id="${d.id}"><span class="nm" title="${esc(d.name)}">${esc(d.name)}</span>${d.status !== s.s ? spill(d.status) : `<i class="sd" style="background:${SC[d.status] || "#64748b"}" title="${esc(d.status)}"></i>`}<span class="ia"><button data-pe="${d.id}" title="Edit">✎</button><button data-pd="${d.id}" title="Delete">🗑</button></span></div>`).join("") || '<span class="e0">—</span>'}</div>`;
+              })
+              .join("")}</div>`,
+        ).join("")}</div></div>
+<div class="grid"><div class="card"><h2>Stage distribution</h2><div class="cv"><canvas id="c1"></canvas></div></div><div class="card w2"><h2>Holding vs Trade by stage</h2><div class="cv"><canvas id="c2"></canvas></div></div></div>
+<div class="card"><h2>Pourashava coverage</h2><div class="sc"><table><tr><th>Pourashava</th><th>Holding</th><th>Trade</th><th>Progress</th></tr>${rows
+          .map((r) => {
+            const ds = [r.Holding, r.Trade].filter(Boolean),
+              p = Math.round(
+                (ds.reduce((s, d) => s + d.stage, 0) / ds.length / 4) * 100,
+              );
+            return `<tr><td><b>${esc(r.n)}</b></td>${cell(r.Holding)}${cell(r.Trade)}<td><div class="bar" title="${p}%"><i style="width:${p}%"></i></div></td></tr>`;
+          })
+          .join("")}</table></div></div>`;
+        if (!window.Chart) return;
+        const g = cd(),
+          lb = ST.map((s) => s.n),
+          op = {
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" } },
+          };
+        mk("#c1", {
+          type: "doughnut",
+          data: {
+            labels: lb,
+            datasets: [
+              {
+                data: ST.map((s, i) => pcnt(i)),
+                backgroundColor: STC,
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: { ...op, cutout: "62%" },
+        });
+        mk("#c2", {
+          type: "bar",
+          data: {
+            labels: lb,
+            datasets: ["Holding", "Trade"].map((t, j) => ({
+              label: t,
+              backgroundColor: j ? "#ec4899" : "#6366f1",
+              borderRadius: 5,
+              data: ST.map(
+                (s, i) => P.filter((d) => d.stage === i && d.type === t).length,
+              ),
+            })),
+          },
+          options: {
+            ...op,
+            scales: {
+              x: { stacked: true, grid: { display: false } },
+              y: {
+                stacked: true,
+                beginAtZero: true,
+                ticks: { precision: 0 },
+                grid: { color: g("--bd") },
+              },
+            },
+          },
+        });
+      }
+      function ptable() {
+        const a = P.filter(
+          (d) =>
+            (!q ||
+              [d.name, d.type, d.status, ST[d.stage].n]
+                .join(" ")
+                .toLowerCase()
+                .includes(q)) &&
+            (!PF.t || d.type === PF.t) &&
+            (PF.s === "" || d.stage == PF.s) &&
+            (!PF.x || d.status === PF.x),
+        );
+        const v = (d) =>
+          psk === "stage" ? d.stage : String(d[psk]).toLowerCase();
+        a.sort((x, y) => (v(x) > v(y) ? 1 : v(x) < v(y) ? -1 : 0) * psd);
+        const sel = (k, l, arr) =>
+          `<select data-pf="${k}"><option value="">${l}</option>${arr.map(([x, t]) => `<option value="${x}"${String(PF[k]) === String(x) ? " selected" : ""}>${t}</option>`).join("")}</select>`;
+        $("#main").innerHTML =
+          `<div class="card"><div class="ch"><h2>Pipeline entries <span class="mu" style="font-weight:400">· ${a.length} of ${P.length}</span></h2><div class="tools">${sel(
+            "t",
+            "All types",
+            [
+              ["Holding", "Holding"],
+              ["Trade", "Trade"],
+            ],
+          )}${sel(
+            "s",
+            "All stages",
+            ST.map((s, i) => [i, s.n]),
+          )}${sel(
+            "x",
+            "All statuses",
+            SS.map((s) => [s, s]),
+          )}</div></div><div class="sc"><table><tr><th>#</th>${[
+            ["name", "Pourashava"],
+            ["type", "Type"],
+            ["stage", "Stage"],
+            ["status", "Status"],
+          ]
+            .map(
+              ([k, l]) =>
+                `<th class="s" data-pk="${k}">${l}${psk === k ? (psd > 0 ? " ▲" : " ▼") : ""}</th>`,
+            )
+            .join(
+              "",
+            )}<th></th></tr>${a.map((d, i) => `<tr><td class="mu">${i + 1}</td><td><b>${esc(d.name)}</b></td><td>${tchip(d.type)}</td><td><span class="pill" style="--c:${STC[d.stage]}">${ST[d.stage].n}</span></td><td>${spill(d.status)}</td><td class="ra"><button data-pe="${d.id}" title="Edit">✎</button><button data-pd="${d.id}" title="Delete">🗑</button></td></tr>`).join("") || '<tr><td colspan="6" class="mu" style="text-align:center;padding:24px">No entries match</td></tr>'}</table></div></div>`;
+      }
+      let peid = null;
+      function openP(id) {
+        peid = id;
+        const d = id
+          ? P.find((x) => x.id === id)
+          : { name: "", type: "Holding", stage: 0, status: "Queued" };
+        $("#pmt").textContent = id
+          ? "Edit pipeline entry"
+          : "Add pipeline entry";
+        $("#fpn").value = d.name;
+        $("#fpy").value = d.type;
+        $("#fpg").value = d.stage;
+        $("#fpx").value = d.status;
+        $("#pnl").innerHTML = [...new Set(D.map((x) => x.pz))]
+          .sort()
+          .map((x) => `<option value="${esc(x)}">`)
+          .join("");
+        $("#pm").hidden = false;
+        $("#fpn").focus();
+      }
+      function pdel(id) {
+        const i = P.findIndex((x) => x.id === id),
+          [x] = P.splice(i, 1);
+        mut();
+        toast(`Deleted ${x.name} ${x.type}`, () => {
+          P.splice(i, 0, x);
+          mut();
+        });
+      }
+      $("#fpg").innerHTML = ST.map(
+        (s, i) => `<option value="${i}">${s.n}</option>`,
+      ).join("");
+      $("#fpx").innerHTML = SS.map((s) => `<option>${s}</option>`).join("");
+      $("#fpg").onchange = () => ($("#fpx").value = ST[$("#fpg").value].s);
+      $("#psv").onclick = () => {
+        const name = $("#fpn").value.trim().replace(/\s+/g, " ");
+        if (!name) {
+          $("#fpn").focus();
+          return;
+        }
+        const o = {
+          name,
+          type: $("#fpy").value,
+          stage: +$("#fpg").value,
+          status: $("#fpx").value,
+        };
+        if (
+          P.some(
+            (d) =>
+              d.id !== peid &&
+              d.name.toLowerCase() === name.toLowerCase() &&
+              d.type === o.type,
+          )
+        ) {
+          toast(`${name} already has a ${o.type} entry`);
+          return;
+        }
+        const ed = !!peid;
+        if (ed)
+          Object.assign(
+            P.find((x) => x.id === peid),
+            o,
+          );
+        else P.push({ id: uid(), ...o });
+        $("#pm").hidden = true;
+        mut();
+        toast(ed ? "Entry updated" : "Entry added");
+      };
+      $("#pcx").onclick = () => ($("#pm").hidden = true);
+      $("#pm").onclick = (e) => {
+        if (e.target.id === "pm") e.target.hidden = true;
+      };
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") $("#pm").hidden = true;
+      });
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-pe],[data-pd],[data-pk]");
+        if (!b) return;
+        const s = b.dataset;
+        if (s.pe) openP(s.pe);
+        else if (s.pd) pdel(s.pd);
+        else {
+          psd = psk === s.pk ? -psd : 1;
+          psk = s.pk;
+          render();
+        }
+      });
+      document.addEventListener("change", (e) => {
+        const f = e.target.dataset && e.target.dataset.pf;
+        if (f) {
+          PF[f] = e.target.value;
+          render();
+        }
+      });
+      let dr = null;
+      const M = $("#main");
+      M.addEventListener("dragstart", (e) => {
+        const t = e.target.closest(".tile");
+        if (t) {
+          dr = t.dataset.id;
+          e.dataTransfer.setData("text/plain", dr);
+          t.classList.add("dg");
+        }
+      });
+      M.addEventListener("dragend", () =>
+        document
+          .querySelectorAll(".dg,.ov2")
+          .forEach((x) => x.classList.remove("dg", "ov2")),
+      );
+      M.addEventListener("dragover", (e) => {
+        const c = e.target.closest(".col"),
+          d = P.find((x) => x.id === dr);
+        if (c && d && (!c.dataset.t || c.dataset.t === d.type)) {
+          e.preventDefault();
+          c.classList.add("ov2");
+        }
+      });
+      M.addEventListener("dragleave", (e) => {
+        const c = e.target.closest(".col");
+        if (c && !c.contains(e.relatedTarget)) c.classList.remove("ov2");
+      });
+      M.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const c = e.target.closest(".col"),
+          d = P.find((x) => x.id === dr);
+        if (
+          c &&
+          d &&
+          d.stage !== +c.dataset.s &&
+          (!c.dataset.t || c.dataset.t === d.type)
+        ) {
+          d.stage = +c.dataset.s;
+          d.status = ST[d.stage].s;
+          mut();
+          toast(`${d.name} ${d.type} → ${ST[d.stage].n}`);
+        }
+        dr = null;
+      });
+      $("#rst").onclick = () => {
+        const o = D,
+          op = P;
+        D = SEED.map((r) => ({ id: uid(), ...r }));
+        P = pseed();
+        mut();
+        toast("Reset all data to original", () => {
+          D = o;
+          P = op;
+          mut();
+        });
+      };
+      function pfromRows(r) {
+        const o = [];
+        COLS.forEach((c, i) => {
+          for (let k = 2; k < r.length; k++) {
+            const w = r[k] || [],
+              v = w[c + 1];
+            if (!v || !String(v).trim()) continue;
+            const st = i ? String(w[c + 2] || "").trim() : "";
+            o.push({
+              id: uid(),
+              ...pparse(v),
+              stage: i,
+              status: pcs(st) || ST[i].s,
+            });
+          }
+        });
+        return o;
+      }
+      $("#imp").onchange = async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          const wb = XLSX.read(await f.arrayBuffer(), { cellDates: true });
+          let m = 0,
+            p = 0;
+          const oD = D,
+            oP = P;
+          if (wb.SheetNames.some((s) => /^all/i.test(s))) {
+            const r = fromWb(wb);
+            if (r.length) {
+              D = r;
+              m = r.length;
+            }
+          }
+          const ps =
+            wb.SheetNames.find((s) => /^pipeline$/i.test(s)) ||
+            wb.SheetNames.find((s) => {
+              const w = XLSX.utils.sheet_to_json(wb.Sheets[s], {
+                header: 1,
+                defval: null,
+              });
+              return (
+                w[0] &&
+                w[0].some((v) =>
+                  /^entry file ready/i.test(String(v || "").trim()),
+                )
+              );
+            });
+          if (ps) {
+            const r = pfromRows(
+              XLSX.utils.sheet_to_json(wb.Sheets[ps], {
+                header: 1,
+                defval: null,
+              }),
+            );
+            if (r.length) {
+              P = r;
+              p = r.length;
+            }
+          }
+          if (!m && !p) throw 0;
+          mut();
+          toast(`Imported ${m} MRAS + ${p} pipeline records`, () => {
+            D = oD;
+            P = oP;
+            mut();
+          });
+        } catch (x) {
+          toast("Could not read that workbook");
+        }
+        e.target.value = "";
+      };
+      function pSheet(wb) {
+        const a = [[], []];
+        ST.forEach((s, i) => {
+          const c = COLS[i];
+          a[0][c] = s.x;
+          a[1][c] = i ? "Sl" : "Count";
+          a[1][c + 1] = "Name";
+          if (i) a[1][c + 2] = "Status";
+          P.filter((d) => d.stage === i).forEach((d, k) => {
+            const r = (a[k + 2] = a[k + 2] || []);
+            r[c] = k + 1;
+            r[c + 1] = d.name + " " + d.type;
+            if (i) r[c + 2] = d.status;
+          });
+        });
+        const ws = XLSX.utils.aoa_to_sheet(
+          a.map((r) => Array.from(r, (v) => v ?? null)),
+        );
+        ws["!merges"] = COLS.map((c, i) => ({
+          s: { r: 0, c },
+          e: { r: 0, c: i ? c + 2 : c + 1 },
+        }));
+        ws["!cols"] = Array.from({ length: 19 }, () => ({ wch: 24 }));
+        XLSX.utils.book_append_sheet(wb, ws, "Pipeline");
+      }
+
       render();
     </script>
   </body>

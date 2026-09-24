@@ -1,0 +1,3354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>MRAS Admin Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      :root {
+        --bg: #f1f4fa;
+        --cd: #fff;
+        --tx: #0f172a;
+        --mu: #64748b;
+        --bd: #e3e8f2;
+        --ac: #4f46e5;
+        --sh:
+          0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0b1020;
+          --cd: #141b30;
+          --tx: #e8ecf7;
+          --mu: #93a0bd;
+          --bd: #232c47;
+          --ac: #818cf8;
+          --sh: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0b1020;
+        --cd: #141b30;
+        --tx: #e8ecf7;
+        --mu: #93a0bd;
+        --bd: #232c47;
+        --ac: #818cf8;
+        --sh: 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+      :root {
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--tx);
+        font:
+          14px/1.45 Inter,
+          system-ui,
+          "Segoe UI",
+          Arial,
+          sans-serif;
+      }
+      .app {
+        display: grid;
+        grid-template-columns: 236px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      aside {
+        background: #0f172a;
+        color: #cbd5e1;
+        padding: 18px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+      }
+      .brand {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 0 6px;
+      }
+      .brand b {
+        color: #fff;
+        display: block;
+      }
+      .brand small {
+        color: #94a3b8;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #4f46e5, #ec4899);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+      }
+      nav {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 1;
+      }
+      .nv {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: none;
+        border: 0;
+        color: #cbd5e1;
+        padding: 9px 10px;
+        border-radius: 10px;
+        font: inherit;
+        cursor: pointer;
+        text-align: left;
+      }
+      .nv:hover {
+        background: #1e293b;
+      }
+      .nv.on {
+        background: #4f46e5;
+        color: #fff;
+      }
+      .nv b {
+        margin-left: auto;
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 99px;
+        padding: 1px 8px;
+      }
+      .side-f {
+        display: grid;
+        gap: 6px;
+      }
+      .b2 {
+        background: #1e293b;
+        color: #e2e8f0;
+        border: 0;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font: inherit;
+        cursor: pointer;
+        text-align: left;
+      }
+      .b2:hover {
+        background: #334155;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 18px 22px 0;
+      }
+      h1 {
+        font-size: 21px;
+        margin: 0;
+      }
+      h2 {
+        font-size: 15px;
+        margin: 0 0 12px;
+      }
+      .mu {
+        color: var(--mu);
+      }
+      .tr {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      main {
+        padding: 16px 22px 40px;
+        display: grid;
+        gap: 14px;
+      }
+      .btn {
+        border: 1px solid var(--bd);
+        background: var(--cd);
+        color: var(--tx);
+        padding: 8px 14px;
+        border-radius: 10px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn:hover {
+        border-color: var(--ac);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      .pri {
+        background: var(--ac);
+        color: #fff;
+        border-color: var(--ac);
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: var(--tx);
+        background: var(--bg);
+        border: 1px solid var(--bd);
+        border-radius: 10px;
+        padding: 8px 10px;
+        width: 100%;
+      }
+      #q {
+        width: 240px;
+      }
+      .card {
+        background: var(--cd);
+        border: 1px solid var(--bd);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: var(--sh);
+        min-width: 0;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+      }
+      .kp {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        padding: 14px;
+      }
+      .kp:hover {
+        border-color: var(--c);
+      }
+      .kp::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        background: var(--c);
+      }
+      .kp .ic {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        background: color-mix(in srgb, var(--c) 16%, transparent);
+      }
+      .kp b {
+        font-size: 22px;
+        display: block;
+        line-height: 1.1;
+      }
+      .kp small {
+        color: var(--mu);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .w2 {
+        grid-column: span 2;
+      }
+      .cv {
+        position: relative;
+        height: 260px;
+      }
+      .ch {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .ch h2 {
+        margin: 0;
+      }
+      .tools {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tools select {
+        width: auto;
+        min-width: 130px;
+      }
+      .sc {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 640px;
+      }
+      th {
+        text-align: left;
+        font-size: 11.5px;
+        color: var(--mu);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--bd);
+        white-space: nowrap;
+      }
+      th.s {
+        cursor: pointer;
+      }
+      td {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--bd);
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: color-mix(in srgb, var(--bd) 25%, transparent);
+      }
+      .rm {
+        max-width: 320px;
+        color: var(--mu);
+      }
+      .ra {
+        text-align: right;
+        white-space: nowrap;
+      }
+      .ra button {
+        background: none;
+        border: 0;
+        cursor: pointer;
+        color: var(--tx);
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      .ra button:hover {
+        background: var(--bd);
+      }
+      .chip,
+      .pill {
+        display: inline-block;
+        padding: 1px 9px;
+        border-radius: 99px;
+        font-size: 11.5px;
+        font-weight: 700;
+        background: color-mix(in srgb, var(--c) 16%, transparent);
+        color: var(--c);
+        white-space: nowrap;
+      }
+      .pg {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .rc {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--bd);
+        flex-wrap: wrap;
+      }
+      .rc:last-child {
+        border: 0;
+      }
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 12, 28, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 9;
+      }
+      .ov[hidden] {
+        display: none;
+      }
+      .mod {
+        background: var(--cd);
+        border-radius: 16px;
+        padding: 20px;
+        width: min(560px, 100%);
+        max-height: 92vh;
+        overflow: auto;
+        border: 1px solid var(--bd);
+      }
+      .fg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .fg label {
+        display: grid;
+        gap: 4px;
+        font-weight: 600;
+        font-size: 12.5px;
+      }
+      .fg .f {
+        grid-column: 1/-1;
+      }
+      .mb {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        transform: translate(-50%, 30px);
+        background: #111827;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+        z-index: 10;
+        max-width: 92vw;
+      }
+      #toast.on {
+        opacity: 1;
+        transform: translate(-50%, 0);
+        pointer-events: auto;
+      }
+      #toast button {
+        margin-left: 10px;
+        background: #4f46e5;
+        color: #fff;
+        border: 0;
+        border-radius: 8px;
+        padding: 3px 10px;
+        cursor: pointer;
+      }
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        aside {
+          position: static;
+          height: auto;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+        nav {
+          flex-direction: row;
+          overflow-x: auto;
+          flex: 1 1 100%;
+          order: 3;
+        }
+        .nv {
+          white-space: nowrap;
+        }
+        .side-f {
+          grid-auto-flow: column;
+          order: 2;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .w2 {
+          grid-column: auto;
+        }
+        #q {
+          width: 100%;
+        }
+        .top,
+        main {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <div class="brand">
+          <div class="logo">M</div>
+          <div><b>MRAS Admin</b><small>Data Entry Tracker</small></div>
+        </div>
+        <nav id="nav"></nav>
+        <div class="side-f">
+          <label class="b2"
+            >⬆ Import .xlsx<input
+              id="imp"
+              type="file"
+              accept=".xlsx,.xls"
+              hidden /></label
+          ><button class="b2" id="exp">⬇ Export .xlsx</button
+          ><button class="b2" id="rst">↺ Reset data</button>
+        </div>
+      </aside>
+      <div>
+        <div class="top">
+          <div>
+            <h1 id="ttl"></h1>
+            <span class="mu" id="sub"></span>
+          </div>
+          <div class="tr">
+            <input
+              id="q"
+              placeholder="Search Pourashava, district, remarks…"
+            /><button class="btn pri" id="add">＋ Add record</button>
+          </div>
+        </div>
+        <main id="main"></main>
+      </div>
+    </div>
+    <div class="ov" id="md" hidden>
+      <div class="mod">
+        <h2 id="mt"></h2>
+        <div class="fg">
+          <label>Division<input id="fdv" list="dvl" /></label
+          ><label>District<input id="fds" list="dsl" /></label>
+          <label>Pourashava<input id="fpz" /></label
+          ><label>Tax database<select id="fmd"></select></label>
+          <label>Sheet / status<select id="fc"></select></label
+          ><label
+            >Tax by LGCRRP<select id="flg">
+              <option>Yes</option>
+              <option>No</option>
+            </select></label
+          >
+          <label>Package No.<input id="fpk" /></label
+          ><label>Working / visit date<input id="fdt" type="date" /></label>
+          <label>Follow-up date<input id="ffu" type="date" /></label
+          ><label>Contact<input id="fcn" /></label>
+          <label class="f"
+            >Remarks<textarea id="frm" rows="3"></textarea>
+          </label>
+        </div>
+        <datalist id="dvl"></datalist><datalist id="dsl"></datalist>
+        <div class="mb">
+          <button class="btn" id="cx">Cancel</button
+          ><button class="btn pri" id="sv">Save</button>
+        </div>
+      </div>
+    </div>
+    <div id="toast"></div>
+    <script>
+      const SEED = [
+        {
+          dv: "Barishal",
+          ds: "Barguna",
+          pz: "Amtali",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barguna",
+          pz: "Patharghata",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barishal",
+          pz: "Banaripara",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-12",
+          fu: "",
+          cn: "",
+          rm: "Data will Provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barishal",
+          pz: "Banaripara",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-12",
+          fu: "",
+          cn: "",
+          rm: "Data will Provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barishal",
+          pz: "Banaripara",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-12",
+          fu: "",
+          cn: "",
+          rm: "Data will Provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barishal",
+          pz: "Wazirpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-13",
+          fu: "",
+          cn: "",
+          rm: "Data will Provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Barishal",
+          pz: "Wazirpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-13",
+          fu: "",
+          cn: "",
+          rm: "Data will Provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Bhola",
+          pz: "Charfession",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Need time",
+          c: 1,
+        },
+        {
+          dv: "Barishal",
+          ds: "Bhola",
+          pz: "Doulatkhan",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-16",
+          fu: "",
+          cn: "",
+          rm: "Hand over",
+          c: 0,
+        },
+        {
+          dv: "Barishal",
+          ds: "Bhola",
+          pz: "Doulatkhan",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-07",
+          fu: "",
+          cn: "",
+          rm: "Hand over",
+          c: 0,
+        },
+        {
+          dv: "Barishal",
+          ds: "Patuakhali",
+          pz: "Kuakata",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Barishal",
+          ds: "Patuakhali",
+          pz: "Kuakata",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Barishal",
+          ds: "Pirojpur",
+          pz: "Shorupkathi",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Partial hand written data received",
+          c: 0,
+        },
+        {
+          dv: "Barishal",
+          ds: "Pirojpur",
+          pz: "Shorupkathi",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Partial hand written data received",
+          c: 0,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Brahmanbaria",
+          pz: "Bancharampur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chandpur",
+          pz: "Faridgonj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Dohazari",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Nazirhat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application no data provide",
+          c: 2,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Nazirhat",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application no data provide",
+          c: 2,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Rangunia",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Take time for data provide.",
+          c: 1,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Sandwip",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Using 3rd party application software /not interested to share data",
+          c: 1,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Satkania",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Satkania",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Chattogram",
+          pz: "Sitakunda",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Using 3rd party application software /not interested to share data",
+          c: 1,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Cox's Bazar",
+          pz: "Teknaf",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Feni",
+          pz: "Chhagalnaiya",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Khagrchhari",
+          pz: "Khagrachhari",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Khagrchhari",
+          pz: "Ramgarh",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Khagrchhari",
+          pz: "Ramgarh",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Laxmipur",
+          pz: "Ramgonj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Noakhali",
+          pz: "Hatia",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Noakhali",
+          pz: "Hatia",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Noakhali",
+          pz: "Hatia",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Noakhali",
+          pz: "Kabirhat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Chattogram",
+          ds: "Noakhali",
+          pz: "Kabirhat",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Dhaka",
+          pz: "Dhamrai",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Have 3rd party software, decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Dhaka",
+          pz: "Dhamrai",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Have 3rd party software, decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Alfadanga",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Alfadanga",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received in hand written format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Alfadanga",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "No Data (Water not provide)",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Bhanga",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data will provide, Not response",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Faridpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Have 3rd party software, decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Madhukhali",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Have 3rd party software, will give data",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Madhukhali",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "No Data (Water not provide)",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Nagarkanda",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their hand written ledger book",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Faridpur",
+          pz: "Nagarkanda",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "No Documented Data/Not provide water",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Gopalganj",
+          pz: "Kotalipara",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Will provide us",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Gopalganj",
+          pz: "Muksudpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Gopalganj",
+          pz: "Muksudpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Gopalganj",
+          pz: "Muksudpur",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Kishoreganj",
+          pz: "Hossainpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Madaripur",
+          pz: "Kalkini",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received their working format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Madaripur",
+          pz: "Kalkini",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Madaripur",
+          pz: "Rajoir",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received from their working format",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Madaripur",
+          pz: "Rajoir",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data will provide",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Madaripur",
+          pz: "Shibchar",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Narsingdi",
+          pz: "Shibpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Narsingdi",
+          pz: "Shibpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Narsingdi",
+          pz: "Shibpur",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Not provide water/Not provide water",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Rajbari",
+          pz: "Goalanda",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-19",
+          fu: "",
+          cn: "",
+          rm: "Already working IUGIP project",
+          c: 2,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Rajbari",
+          pz: "Goalanda",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-19",
+          fu: "",
+          cn: "",
+          rm: "Already working IUGIP project",
+          c: 2,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Rajbari",
+          pz: "Pangsha",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received hand written formate",
+          c: 0,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Bhedarganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Need time, decission pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Bhedarganj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Bhedarganj",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Damudya",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Damudya",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Gosairhat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Gosairhat",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Decision pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Gosairhat",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "5242.0",
+          rm: "Need time, decission pending",
+          c: 1,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Naria",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Naria",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Zajira",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already Using MSU Software",
+          c: 2,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Shariatpur",
+          pz: "Zajira",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already Using MSU Software",
+          c: 2,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Tangail",
+          pz: "Ghatail",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Dhaka",
+          ds: "Tangail",
+          pz: "Ghatail",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Khulna",
+          ds: "Narail",
+          pz: "Kalia",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Khulna",
+          ds: "Narail",
+          pz: "Lohagara",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Khulna",
+          ds: "Narail",
+          pz: "Lohagara",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Khulna",
+          ds: "Narail",
+          pz: "Lohagara",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Jamalpur",
+          pz: "Bokshigonj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Jamalpur",
+          pz: "Hazrabari",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Jamalpur",
+          pz: "Hazrabari",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Mymensingh",
+          pz: "Fulbaria",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Mymensingh",
+          pz: "Gafargaon",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Mymensingh",
+          pz: "Haluaghat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Mymensingh",
+          pz: "Haluaghat",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Mymensingh",
+          pz: "Nandail",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Netrokona",
+          pz: "Kendua",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Administration dicission pending",
+          c: 1,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Netrokona",
+          pz: "Madan",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "3500.0",
+          rm: "Administration dicission pending",
+          c: 1,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Netrokona",
+          pz: "Netrokona",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Use 3rd party software",
+          c: 1,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Sherpur",
+          pz: "Nakla",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Mymensingh",
+          ds: "Sherpur",
+          pz: "Sreebordi",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Dhunot",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-28",
+          fu: "",
+          cn: "",
+          rm: "Data received in hand written format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Dhunot",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-28",
+          fu: "",
+          cn: "",
+          rm: "Hand written format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Gabtali",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-22",
+          fu: "",
+          cn: "",
+          rm: "Data entry done and handover on 11-Aug-2026",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Nandigram",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-29",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: ".",
+          pz: "Shantahar",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-16",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Shantahar",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-16",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Shariakandi",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-22",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Shariakandi",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-22",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Sherpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Sherpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Shibganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-20",
+          fu: "",
+          cn: "",
+          rm: "Data received in hand written format",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Shibganj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-20",
+          fu: "",
+          cn: "",
+          rm: "Data received in hand written format",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Talora",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-19",
+          fu: "",
+          cn: "",
+          rm: "Data received in their working format",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Bogura",
+          pz: "Talora",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-19",
+          fu: "",
+          cn: "",
+          rm: "Data received in their working format",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Chapai Nawab",
+          pz: "Shibganj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-05",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Chapai Nawabgar",
+          pz: "Shibganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-05",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Joypurhat",
+          pz: "Akkelpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-14",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Joypurhat",
+          pz: "Akkelpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-14",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Joypurhat",
+          pz: "Khetlal",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-15",
+          fu: "",
+          cn: "",
+          rm: "Data received in hand written format",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Naogaon",
+          pz: "Dhamoirhat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-13",
+          fu: "",
+          cn: "",
+          rm: "Data entry their on pourashava",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Bagatipara",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Bagatipara",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Baraigram",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Baraigram",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already use MSU web application",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Gopalpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Gopalpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Natore",
+          pz: "Naldanga",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Not response, DC permision issue",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Atghoria",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Need time for reassesment",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Atghoria",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Need time for reassesment",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Bhangura",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-31",
+          fu: "",
+          cn: "",
+          rm: "Assesment pending pourashava end need time",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Bhangura",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-31",
+          fu: "",
+          cn: "",
+          rm: "Assesment pending pourashava end need time",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Chatmohar",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-09-02",
+          fu: "",
+          cn: "",
+          rm: "Already Using MSU",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Pabna",
+          pz: "Faridpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received hand written (Done)",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Bhabaniganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Working format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Durgapur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Data Entry done and handover on (15-Aug-2026)",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Durgapur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Data template preparation on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Godagari",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-06",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Godagari",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-06",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Kakonhat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-07",
+          fu: "",
+          cn: "",
+          rm: "Asked for time as decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Katakhali",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data Entry done and handover on (11-Aug-2026)",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Katakhali",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data received working format, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Keshorehat",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-12",
+          fu: "",
+          cn: "",
+          rm: "Already using MSU Software",
+          c: 2,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Mundumala",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-08",
+          fu: "",
+          cn: "",
+          rm: "Data will provide us (No response)",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Rajshahi",
+          pz: "Taherpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Data entry on their pourashava",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Kazipur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Using 3rd party application software decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Kazipur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Using 3rd party application software decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Raigonj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-26",
+          fu: "",
+          cn: "",
+          rm: "Data entry on their pourashava",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Tarash",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-30",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Tarash",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-30",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rajshahi",
+          ds: "Sirajganj",
+          pz: "Tarash",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-30",
+          fu: "",
+          cn: "",
+          rm: "Hand written ledger book, Data template on process",
+          c: 0,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Biral",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already working RUTDP LGED project",
+          c: 2,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Biral",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "Already working RUTDP LGED project",
+          c: 2,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Dinajpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Dinajpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Dinajpur",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-27",
+          fu: "",
+          cn: "",
+          rm: "Decision pending from administrator",
+          c: 1,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Fulbari",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-08-02",
+          fu: "",
+          cn: "",
+          rm: "Water will provide us",
+          c: 1,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Setabganj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-30",
+          fu: "",
+          cn: "",
+          rm: "Not provide",
+          c: 1,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Dinajpur",
+          pz: "Setabganj",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "2026-07-30",
+          fu: "",
+          cn: "",
+          rm: "Receivrd in hand written document",
+          c: 0,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Gaibandha",
+          pz: "Palashbari",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Gaibandha",
+          pz: "Palashbari",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Panchagarh",
+          pz: "Debiganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Rangpur",
+          ds: "Panchagarh",
+          pz: "Debiganj",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sunamganj",
+          pz: "Jagannathpur",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sunamganj",
+          pz: "Jagannathpur",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sylhet",
+          pz: "Bishwanath",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sylhet",
+          pz: "Bishwanath",
+          md: "Trade License",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sylhet",
+          pz: "Bishwanath",
+          md: "Water",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+        {
+          dv: "Sylhet",
+          ds: "Sylhet",
+          pz: "Jakiganj",
+          md: "Holding Tax",
+          lg: "Yes",
+          pk: "SF-22",
+          dt: "",
+          fu: "",
+          cn: "",
+          rm: "",
+          c: 3,
+        },
+      ];
+      const $ = (s) => document.querySelector(s);
+      const CATS = [
+        { n: "Working", s: "Working Pouroshovas", c: "#10b981", i: "🛠️" },
+        {
+          n: "Non Responsive",
+          s: "Non Responsive Pouroshovas",
+          c: "#ef4444",
+          i: "📵",
+        },
+        { n: "Using MSU", s: "Pouroshovas using MSU", c: "#0ea5e9", i: "💻" },
+        { n: "No Remarks", s: "No Remarks", c: "#94a3b8", i: "📝" },
+      ];
+      const MODS = ["Holding Tax", "Trade License", "Water"],
+        CODES = ["NoTax", "No Trade", "No Water"],
+        MC = ["#6366f1", "#ec4899", "#06b6d4"];
+      const esc = (s) =>
+        String(s ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const iso = (v) => {
+        if (v instanceof Date) {
+          const d = new Date(v.getTime() + 432e5);
+          return (
+            d.getFullYear() +
+            "-" +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(d.getDate()).padStart(2, "0")
+          );
+        }
+        return v ? String(v).trim() : "";
+      };
+      const fmt = (s) =>
+        s
+          ? new Date(s + "T00:00:00").toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+          : "—";
+      const nm = (v) => {
+        v = String(v || "").trim();
+        const i = CODES.findIndex((c) => c.toLowerCase() === v.toLowerCase());
+        return i >= 0
+          ? MODS[i]
+          : MODS.find((m) => m.toLowerCase() === v.toLowerCase()) || v;
+      };
+      let n = 0;
+      const uid = () => Date.now().toString(36) + n++;
+      let D;
+      try {
+        D = JSON.parse(localStorage.getItem("mras.v1"));
+      } catch (e) {}
+      if (!Array.isArray(D)) D = SEED.map((r) => ({ id: uid(), ...r }));
+      const save = () => {
+        try {
+          localStorage.setItem("mras.v1", JSON.stringify(D));
+        } catch (e) {}
+      };
+      const mut = () => {
+        save();
+        render();
+      };
+      let V = -2,
+        F = { dv: "", md: "", c: "" },
+        sk = "",
+        sd = 1,
+        pg = 0,
+        q = "",
+        CH = [];
+      const PG = 12;
+      const cn = (i) => D.filter((d) => d.c === i).length;
+      const mchip = (m) =>
+        `<span class="chip" style="--c:${MC[MODS.indexOf(m)] || "#64748b"}">${esc(m)}</span>`;
+      const cpill = (c) =>
+        `<span class="pill" style="--c:${CATS[c].c}">${CATS[c].n}</span>`;
+      function nav() {
+        $("#nav").innerHTML = [
+          [-2, "📊", "Overview", D.length],
+          [-1, "🗂️", "All Data", D.length],
+          ...CATS.map((c, i) => [i, c.i, c.n, cn(i)]),
+        ]
+          .map(
+            ([v, i, l, c]) =>
+              `<button class="nv${V === v ? " on" : ""}" data-v="${v}"><span>${i}</span>${l}<b>${c}</b></button>`,
+          )
+          .join("");
+      }
+      function mk(id, cfg) {
+        if (window.Chart) CH.push(new Chart($(id), cfg));
+      }
+      function ov() {
+        const t = D.length || 1,
+          pz = new Set(D.map((d) => d.dv + d.ds + d.pz)).size,
+          ds = new Set(D.map((d) => d.ds)).size;
+        const K = [
+          ["📦", "Total records", D.length, "#6366f1", -1, "all sheets"],
+          ["🏛️", "Pourashavas", pz, "#8b5cf6", -1, "unique"],
+          ["📍", "Districts", ds, "#14b8a6", -1, "covered"],
+          ...CATS.map((c, i) => [
+            c.i,
+            c.n,
+            cn(i),
+            c.c,
+            i,
+            Math.round((cn(i) / t) * 100) + "% of total",
+          ]),
+        ];
+        const rec = D.filter((d) => d.dt)
+          .sort((a, b) => b.dt.localeCompare(a.dt))
+          .slice(0, 7);
+        $("#main").innerHTML =
+          `<div class="kpis">${K.map(([i, l, v, c, go, s]) => `<div class="card kp" data-v="${go}" style="--c:${c}"><span class="ic">${i}</span><div><b>${v}</b><small>${l} · ${s}</small></div></div>`).join("")}</div>
+<div class="grid"><div class="card w2"><h2>Records by division</h2><div class="cv"><canvas id="c1"></canvas></div></div><div class="card"><h2>Sheet distribution</h2><div class="cv"><canvas id="c2"></canvas></div></div></div>
+<div class="grid"><div class="card"><h2>Tax database mix</h2><div class="cv"><canvas id="c3"></canvas></div></div><div class="card w2"><h2>Activity timeline</h2><div class="cv"><canvas id="c4"></canvas></div></div></div>
+<div class="card"><h2>Recent activity</h2>${rec.map((d) => `<div class="rc"><span><b>${esc(d.pz)}</b> <span class="mu">${esc(d.ds)}, ${esc(d.dv)}</span> ${mchip(d.md)}</span><span>${cpill(d.c)} <span class="mu">${fmt(d.dt)}</span></span></div>`).join("") || '<p class="mu">No dated records yet</p>'}</div>`;
+        if (!window.Chart) return;
+        const r = getComputedStyle(document.documentElement),
+          g = (k) => r.getPropertyValue(k).trim();
+        Chart.defaults.color = g("--mu");
+        Chart.defaults.font.family = "inherit";
+        const dvs = [...new Set(D.map((d) => d.dv))].sort(
+            (a, b) =>
+              D.filter((d) => d.dv === b).length -
+              D.filter((d) => d.dv === a).length,
+          ),
+          op = {
+            maintainAspectRatio: false,
+            plugins: { legend: { position: "bottom" } },
+          };
+        mk("#c1", {
+          type: "bar",
+          data: {
+            labels: dvs,
+            datasets: CATS.map((c, i) => ({
+              label: c.n,
+              backgroundColor: c.c,
+              borderRadius: 4,
+              data: dvs.map(
+                (v) => D.filter((d) => d.dv === v && d.c === i).length,
+              ),
+            })),
+          },
+          options: {
+            ...op,
+            scales: {
+              x: { stacked: true, grid: { display: false } },
+              y: {
+                stacked: true,
+                ticks: { precision: 0 },
+                grid: { color: g("--bd") },
+              },
+            },
+          },
+        });
+        mk("#c2", {
+          type: "doughnut",
+          data: {
+            labels: CATS.map((c) => c.n),
+            datasets: [
+              {
+                data: CATS.map((c, i) => cn(i)),
+                backgroundColor: CATS.map((c) => c.c),
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: { ...op, cutout: "62%" },
+        });
+        mk("#c3", {
+          type: "doughnut",
+          data: {
+            labels: MODS,
+            datasets: [
+              {
+                data: MODS.map((m) => D.filter((d) => d.md === m).length),
+                backgroundColor: MC,
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: { ...op, cutout: "62%" },
+        });
+        const ds2 = [...new Set(D.map((d) => d.dt).filter(Boolean))].sort();
+        mk("#c4", {
+          type: "line",
+          data: {
+            labels: ds2.map((s) => fmt(s).slice(0, 6)),
+            datasets: [
+              {
+                label: "Records dated",
+                data: ds2.map((s) => D.filter((d) => d.dt === s).length),
+                borderColor: "#4f46e5",
+                backgroundColor: "rgba(79,70,229,.15)",
+                fill: true,
+                tension: 0.35,
+                pointRadius: 3,
+              },
+            ],
+          },
+          options: {
+            ...op,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                beginAtZero: true,
+                ticks: { precision: 0 },
+                grid: { color: g("--bd") },
+              },
+            },
+          },
+        });
+      }
+      function tv() {
+        const cols = [
+          ["dv", "Division"],
+          ["ds", "District"],
+          ["pz", "Pourashava"],
+          ["md", "Tax Database"],
+          ["dt", V === 1 ? "Visit Date" : "Working Date"],
+        ];
+        if (V === -1) cols.push(["c", "Sheet"]);
+        if (V === 1) cols.push(["fu", "Follow-up"], ["cn", "Contact"]);
+        cols.push(["rm", "Remarks"]);
+        let a = D.filter(
+          (d) =>
+            (V < 0 || d.c === V) &&
+            (!q ||
+              [d.dv, d.ds, d.pz, d.md, d.rm, d.cn, CATS[d.c].n]
+                .join(" ")
+                .toLowerCase()
+                .includes(q)) &&
+            (!F.dv || d.dv === F.dv) &&
+            (!F.md || d.md === F.md) &&
+            (V !== -1 || F.c === "" || d.c == F.c),
+        );
+        if (sk) {
+          const v = (d) => (sk === "c" ? CATS[d.c].n : d[sk]);
+          a = [...a].sort(
+            (x, y) => String(v(x)).localeCompare(String(v(y))) * sd,
+          );
+        }
+        const pages = Math.max(1, Math.ceil(a.length / PG));
+        pg = Math.min(pg, pages - 1);
+        const s = a.slice(pg * PG, pg * PG + PG),
+          base = V < 0 ? D : D.filter((d) => d.c === V);
+        const opt = (l, k, arr) =>
+          `<select data-f="${k}"><option value="">${l}</option>${arr.map(([v, t]) => `<option value="${esc(v)}"${String(F[k]) === String(v) ? " selected" : ""}>${esc(t)}</option>`).join("")}</select>`;
+        const cell = (d, k) =>
+          k === "md"
+            ? mchip(d.md)
+            : k === "c"
+              ? cpill(d.c)
+              : k === "dt" || k === "fu"
+                ? fmt(d[k])
+                : k === "rm"
+                  ? `<div class="rm">${esc(d.rm)}</div>`
+                  : k === "pz"
+                    ? `<b>${esc(d.pz)}</b>`
+                    : esc(d[k]);
+        $("#main").innerHTML =
+          `<div class="card"><div class="ch"><h2>${V < 0 ? "All records" : CATS[V].i + " " + CATS[V].n} <span class="mu" style="font-weight:400">· ${a.length} of ${base.length}</span></h2><div class="tools">${opt(
+            "All divisions",
+            "dv",
+            [...new Set(base.map((d) => d.dv))].sort().map((x) => [x, x]),
+          )}${opt(
+            "All tax databases",
+            "md",
+            MODS.map((x) => [x, x]),
+          )}${
+            V === -1
+              ? opt(
+                  "All sheets",
+                  "c",
+                  CATS.map((c, i) => [i, c.n]),
+                )
+              : ""
+          }</div></div>
+<div class="sc"><table><tr><th>#</th>${cols.map(([k, l]) => `<th class="s" data-k="${k}">${l}${sk === k ? (sd > 0 ? " ▲" : " ▼") : ""}</th>`).join("")}<th></th></tr>${s.map((d, i) => `<tr><td class="mu">${pg * PG + i + 1}</td>${cols.map(([k]) => `<td>${cell(d, k)}</td>`).join("")}<td class="ra"><button data-e="${d.id}" title="Edit">✎</button><button data-d="${d.id}" title="Delete">🗑</button></td></tr>`).join("") || `<tr><td colspan="${cols.length + 2}" class="mu" style="text-align:center;padding:24px">No records match</td></tr>`}</table></div>
+<div class="pg"><span class="mu">${a.length ? pg * PG + 1 : 0}–${Math.min(a.length, pg * PG + PG)} of ${a.length}</span><span><button class="btn" data-p="-1" ${pg ? "" : "disabled"}>‹ Prev</button> <b>${pg + 1} / ${pages}</b> <button class="btn" data-p="1" ${pg < pages - 1 ? "" : "disabled"}>Next ›</button></span></div></div>`;
+      }
+      function render() {
+        CH.forEach((c) => c.destroy());
+        CH = [];
+        nav();
+        $("#ttl").textContent =
+          V === -2 ? "Overview" : V === -1 ? "All Data" : CATS[V].n;
+        $("#sub").textContent =
+          V === -2
+            ? "Live summary of all Pourashava data-entry work"
+            : V === -1
+              ? "Master list · every record across all sheets"
+              : "Sheet: " + CATS[V].s;
+        V === -2 ? ov() : tv();
+        $("#dvl").innerHTML = [...new Set(D.map((d) => d.dv))]
+          .sort()
+          .map((x) => `<option value="${esc(x)}">`)
+          .join("");
+        $("#dsl").innerHTML = [...new Set(D.map((d) => d.ds))]
+          .sort()
+          .map((x) => `<option value="${esc(x)}">`)
+          .join("");
+      }
+      function toast(m, u) {
+        const t = $("#toast");
+        t.innerHTML = esc(m) + (u ? ' <button id="un">Undo</button>' : "");
+        t.classList.add("on");
+        clearTimeout(toast.t);
+        toast.t = setTimeout(() => t.classList.remove("on"), 4500);
+        if (u)
+          $("#un").onclick = () => {
+            u();
+            t.classList.remove("on");
+          };
+      }
+      let eid = null;
+      const IDS = [
+        "dv",
+        "ds",
+        "pz",
+        "md",
+        "c",
+        "lg",
+        "pk",
+        "dt",
+        "fu",
+        "cn",
+        "rm",
+      ];
+      function openM(id) {
+        eid = id;
+        const d = id
+          ? D.find((x) => x.id === id)
+          : {
+              dv: "",
+              ds: "",
+              pz: "",
+              md: MODS[0],
+              c: V >= 0 ? V : 0,
+              lg: "Yes",
+              pk: "SF-22",
+              dt: "",
+              fu: "",
+              cn: "",
+              rm: "",
+            };
+        $("#mt").textContent = id ? "Edit record" : "Add record";
+        IDS.forEach((k) => ($("#f" + k).value = d[k]));
+        $("#md").hidden = false;
+        $("#fdv").focus();
+      }
+      function del(id) {
+        const i = D.findIndex((x) => x.id === id),
+          [x] = D.splice(i, 1);
+        mut();
+        toast(`Deleted ${x.pz} · ${x.md}`, () => {
+          D.splice(i, 0, x);
+          mut();
+        });
+      }
+      $("#fds").onchange = () => {
+        const m = D.find(
+          (d) => d.ds.toLowerCase() === $("#fds").value.trim().toLowerCase(),
+        );
+        if (m) $("#fdv").value = m.dv;
+      };
+      $("#sv").onclick = () => {
+        const o = {};
+        IDS.forEach((k) => (o[k] = $("#f" + k).value.trim()));
+        o.c = +o.c;
+        if (!o.pz || !o.dv || !o.ds) {
+          toast("Division, district and Pourashava are required");
+          return;
+        }
+        if (
+          D.some(
+            (d) =>
+              d.id !== eid &&
+              d.pz.toLowerCase() === o.pz.toLowerCase() &&
+              d.ds.toLowerCase() === o.ds.toLowerCase() &&
+              d.md === o.md,
+          )
+        ) {
+          toast(`${o.pz} already has a ${o.md} record`);
+          return;
+        }
+        const ed = !!eid;
+        if (ed)
+          Object.assign(
+            D.find((x) => x.id === eid),
+            o,
+          );
+        else D.push({ id: uid(), ...o });
+        $("#md").hidden = true;
+        mut();
+        toast(ed ? "Record updated" : "Record added");
+      };
+      $("#cx").onclick = () => ($("#md").hidden = true);
+      $("#md").onclick = (e) => {
+        if (e.target.id === "md") e.target.hidden = true;
+      };
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") $("#md").hidden = true;
+      });
+      $("#fmd").innerHTML = MODS.map((m) => `<option>${m}</option>`).join("");
+      $("#fc").innerHTML = CATS.map(
+        (c, i) => `<option value="${i}">${c.n} (${c.s})</option>`,
+      ).join("");
+      $("#add").onclick = () => openM(null);
+      $("#rst").onclick = () => {
+        const o = D;
+        D = SEED.map((r) => ({ id: uid(), ...r }));
+        mut();
+        toast("Reset to original data", () => {
+          D = o;
+          mut();
+        });
+      };
+      $("#q").oninput = (e) => {
+        q = e.target.value.trim().toLowerCase();
+        if (V === -2) V = -1;
+        pg = 0;
+        render();
+      };
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest(
+          "[data-v],[data-e],[data-d],[data-k],[data-p]",
+        );
+        if (!b) return;
+        const s = b.dataset;
+        if (s.v !== undefined) {
+          V = +s.v;
+          F = { dv: "", md: "", c: "" };
+          sk = "";
+          pg = 0;
+          render();
+        } else if (s.e) openM(s.e);
+        else if (s.d) del(s.d);
+        else if (s.k) {
+          sd = sk === s.k ? -sd : 1;
+          sk = s.k;
+          render();
+        } else if (s.p) {
+          pg += +s.p;
+          render();
+        }
+      });
+      document.addEventListener("change", (e) => {
+        const f = e.target.dataset && e.target.dataset.f;
+        if (f) {
+          F[f] = e.target.value;
+          pg = 0;
+          render();
+        }
+      });
+      // Excel import / export
+      const sheetRows = (ws) => {
+        const r = XLSX.utils.sheet_to_json(ws, {
+            header: 1,
+            defval: null,
+            cellDates: true,
+          }),
+          hi = r
+            .slice(0, 8)
+            .findIndex((w) => /^sl/i.test(String(w[0] || "").trim()));
+        if (hi < 0) return [];
+        const P = [
+          ["div", "dv"],
+          ["dist", "ds"],
+          ["pour", "pz"],
+          ["tax d", "md"],
+          ["tax by", "lg"],
+          ["pack", "pk"],
+          ["work", "dt"],
+          ["visit", "dt"],
+          ["follow", "fu"],
+          ["remark", "rm"],
+          ["contact", "cn"],
+        ];
+        const m = r[hi].map((h) => {
+          h = String(h || "")
+            .trim()
+            .toLowerCase();
+          const p = P.find(([a]) => h.startsWith(a));
+          return p ? p[1] : null;
+        });
+        return r
+          .slice(hi + 1)
+          .map((w) => {
+            const o = {
+              dv: "",
+              ds: "",
+              pz: "",
+              md: "",
+              lg: "Yes",
+              pk: "SF-22",
+              dt: "",
+              fu: "",
+              cn: "",
+              rm: "",
+            };
+            m.forEach((k, i) => {
+              if (k && w[i] != null)
+                o[k] =
+                  k === "dt" || k === "fu" ? iso(w[i]) : String(w[i]).trim();
+            });
+            o.md = nm(o.md);
+            return o;
+          })
+          .filter((o) => o.pz);
+      };
+      function fromWb(wb) {
+        const out = [],
+          pool = {},
+          key = (r) =>
+            [r.pz, r.ds, r.md]
+              .map((x) => String(x).trim().toLowerCase())
+              .join("|"),
+          reg = (r) => (pool[key(r)] = pool[key(r)] || []).push(r);
+        const an = wb.SheetNames.find((s) => /^all/i.test(s));
+        if (an)
+          sheetRows(wb.Sheets[an]).forEach((r) => {
+            r.c = -1;
+            out.push(r);
+            reg(r);
+          });
+        const co = (s) => {
+            s = s.toLowerCase();
+            return s.includes("non")
+              ? 1
+              : s.includes("msu")
+                ? 2
+                : s.includes("remark")
+                  ? 3
+                  : s.includes("work")
+                    ? 0
+                    : -1;
+          },
+          ord = [0, 2, 1, 3];
+        wb.SheetNames.map((s) => [co(s), s])
+          .filter((x) => x[0] >= 0)
+          .sort((a, b) => ord.indexOf(a[0]) - ord.indexOf(b[0]))
+          .forEach(([c, s]) =>
+            sheetRows(wb.Sheets[s]).forEach((r) => {
+              const L = pool[key(r)] || [],
+                m = L.find((x) => x.c < 0) || L[0];
+              if (m) {
+                if (m.c < 0) m.c = c;
+                ["dt", "fu", "cn", "rm"].forEach((k) => {
+                  if (!m[k] && r[k]) m[k] = r[k];
+                });
+              } else {
+                r.c = c;
+                out.push(r);
+                reg(r);
+              }
+            }),
+          );
+        out.forEach((r) => {
+          if (r.c < 0) r.c = r.dt || r.rm ? 0 : 3;
+          r.id = uid();
+        });
+        return out;
+      }
+      $("#imp").onchange = async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          const r = fromWb(
+            XLSX.read(await f.arrayBuffer(), { cellDates: true }),
+          );
+          if (!r.length) throw 0;
+          const o = D;
+          D = r;
+          mut();
+          toast(`Imported ${r.length} records`, () => {
+            D = o;
+            mut();
+          });
+        } catch (x) {
+          toast("Could not read that workbook");
+        }
+        e.target.value = "";
+      };
+      $("#exp").onclick = async () => {
+        const dl = window.claude ? await claude.use("downloads") : null;
+        if (!dl) {
+          toast("Export is not available in this view");
+          return;
+        }
+        const dt = (s) =>
+            s
+              ? new Date(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10))
+              : null,
+          wb = XLSX.utils.book_new(),
+          H = [
+            "Division",
+            "District",
+            "Pourashava",
+            "Tax Database",
+            "Tax By LGCRRP",
+            "Package No.",
+          ];
+        const X = (d) => [dt(d.dt), d.rm],
+          XN = (d) => [dt(d.dt), dt(d.fu), d.rm, d.cn];
+        const sh = (name, pre, title, first, extra, recs, code, ext) => {
+          const a = [];
+          if (pre) {
+            a.push([title]);
+            for (let i = 1; i < pre; i++) a.push([]);
+          }
+          a.push([first, ...H, ...extra]);
+          recs.forEach((d, i) =>
+            a.push([
+              i + 1,
+              d.dv,
+              d.ds,
+              d.pz,
+              code ? CODES[MODS.indexOf(d.md)] || d.md : d.md,
+              d.lg,
+              d.pk,
+              ...ext(d),
+            ]),
+          );
+          const ws = XLSX.utils.aoa_to_sheet(a, {
+            cellDates: true,
+            dateNF: "yyyy-mm-dd",
+          });
+          if (pre)
+            ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: pre - 1, c: 8 } }];
+          ws["!cols"] = [6, 12, 14, 16, 14, 10, 10, 13, 42, 13, 14].map(
+            (w) => ({ wch: w }),
+          );
+          XLSX.utils.book_append_sheet(wb, ws, name);
+        };
+        const of = (i) => D.filter((d) => d.c === i);
+        sh("All Data", 0, "", "SL", ["Working Date", "Remarks"], D, 0, X);
+        sh(
+          CATS[0].s,
+          1,
+          "Working Pourashava",
+          "SL No.",
+          ["Working Date", "Remarks"],
+          of(0),
+          1,
+          X,
+        );
+        sh(
+          CATS[1].s,
+          3,
+          "Non Responsive Pouroshovas",
+          "SL No.",
+          ["Visit Date", "Followup Date", "Remarks", "Contact"],
+          of(1),
+          1,
+          XN,
+        );
+        sh(
+          CATS[2].s,
+          3,
+          "List of Pouroshova under Data Entry already Using MSU Software",
+          "SL",
+          ["Working Date", "Remarks"],
+          of(2),
+          1,
+          X,
+        );
+        sh(
+          CATS[3].s,
+          1,
+          "No Remarks",
+          "SL",
+          ["Working Date", "Remarks"],
+          of(3),
+          1,
+          X,
+        );
+        try {
+          await dl.save({
+            filename: "Data_Entry_MRAS_Full_Update.xlsx",
+            data: XLSX.write(wb, { type: "array", bookType: "xlsx" }),
+          });
+          toast("Workbook exported");
+        } catch (x) {
+          if (!x || x.code !== "declined") toast("Export failed");
+        }
+      };
+      render();
+    </script>
+  </body>
+</html>
